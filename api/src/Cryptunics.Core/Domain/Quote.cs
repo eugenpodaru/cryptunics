@@ -1,6 +1,7 @@
 ﻿namespace Cryptunics.Core.Domain
 {
-    using System.Collections.Generic;
-
-    public sealed record Quote(Coin Base, IEnumerable<Rate> Rates);
+    public sealed record Quote(Coin Base, params Rate[] Rates)
+    {
+        public static Quote Empty(Coin @base) => new(@base, Array.Empty<Rate>());
+    }
 }

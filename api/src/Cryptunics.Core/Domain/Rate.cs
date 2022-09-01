@@ -2,5 +2,5 @@
 {
     using System;
 
-    public sealed record Rate(FiatCoin Currency, decimal Price, bool IsDerived, DateTimeOffset Timestamp);
+    public sealed record Rate(FiatCoin Currency, decimal Price, DateTimeOffset Timestamp, bool IsDerived = false);
 }

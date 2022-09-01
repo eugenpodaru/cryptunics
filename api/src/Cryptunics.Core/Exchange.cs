@@ -6,16 +6,16 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public sealed class Exchange
+    public sealed class Exchange : IExchange
     {
-        private readonly FiatCoin _base;
+        private readonly FiatCoin _exchangeBase;
         private readonly ICoinRepository _coinRepository;
         private readonly IFiatCoinQuoteRepository _fiatCoinQuoteRepository;
         private readonly ICryptoCoinQuoteRepository _cryptoCoinQuoteRepository;
 
-        public Exchange(FiatCoin @base, ICoinRepository coinRepository, IFiatCoinQuoteRepository fiatCoinQuoteRepository, ICryptoCoinQuoteRepository cryptoCoinQuoteRepository)
+        public Exchange(FiatCoin exchangeBase, ICoinRepository coinRepository, IFiatCoinQuoteRepository fiatCoinQuoteRepository, ICryptoCoinQuoteRepository cryptoCoinQuoteRepository)
         {
-            _base = @base ?? throw new ArgumentNullException(nameof(@base));
+            _exchangeBase = exchangeBase ?? throw new ArgumentNullException(nameof(exchangeBase));
             _coinRepository = coinRepository ?? throw new ArgumentNullException(nameof(coinRepository));
             _fiatCoinQuoteRepository = fiatCoinQuoteRepository ?? throw new ArgumentNullException(nameof(fiatCoinQuoteRepository));
             _cryptoCoinQuoteRepository = cryptoCoinQuoteRepository ?? throw new ArgumentNullException(nameof(cryptoCoinQuoteRepository));
@@ -25,17 +25,29 @@
 
         public IEnumerable<CryptoCoin> GetAllCryptoCoins() => _coinRepository.GetAllCryptoCoins();
 
-        public Quote GetLatestQuote(CryptoCoin @base, IEnumerable<FiatCoin> currencies)
+        public Quote GetLatestQuote(CryptoCoin @base, params FiatCoin[] currencies)
         {
-            var cryptoQuote = _cryptoCoinQuoteRepository.GetLatestQuote(@base, _base);
-            var fiatQuote = _fiatCoinQuoteRepository.GetLatestQuote(_base, currencies.Except(new[] { _base }));
+            return currencies.Length switch
+            {
+                0 => Quote.Empty(@base),
+                1 => currencies.Single() == _exchangeBase ? GetLatestQuoteForExchangeBase() : GetLatestQuoteForCurrencies(),
+                _ => GetLatestQuoteForCurrencies()
+            };
 
-            var baseRate = cryptoQuote.Rates.First(r => r.Currency == _base);
-            var fiatRates = fiatQuote.Rates.ToDictionary(r => r.Currency);
+            Quote GetLatestQuoteForExchangeBase() => _cryptoCoinQuoteRepository.GetLatestQuote(@base, _exchangeBase);
 
-            var rates = currencies.Select(c => GetDerivedRate(c, _base, fiatRates[c], baseRate));
+            Quote GetLatestQuoteForCurrencies()
+            {
+                var exchangeBaseQuote = GetLatestQuoteForExchangeBase();
+                var fiatQuote = _fiatCoinQuoteRepository.GetLatestQuote(_exchangeBase, currencies.Except(new[] { _exchangeBase }).ToArray());
 
-            return cryptoQuote with { Rates = rates };
+                var exchangeBaseRate = exchangeBaseQuote.Rates.First(r => r.Currency == _exchangeBase);
+                var fiatRates = fiatQuote.Rates.ToDictionary(r => r.Currency);
+
+                var rates = currencies.Select(c => GetDerivedRate(c, _exchangeBase, fiatRates[c], exchangeBaseRate)).ToArray();
+
+                return exchangeBaseQuote with { Rates = rates };
+            }
         }
 
         private static Rate GetDerivedRate(FiatCoin coin, FiatCoin @base, Rate coinRate, Rate baseRate)

@@ -1,5 +1,6 @@
-﻿namespace Cryptunics.Core
+﻿namespace Cryptunics.Core.Repository
 {
+    using Domain;
     using System.Collections.Generic;
 
     public interface IFiatCoinQuoteRepository

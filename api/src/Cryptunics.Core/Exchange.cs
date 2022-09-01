@@ -1,5 +1,7 @@
 ﻿namespace Cryptunics.Core
 {
+    using Domain;
+    using Repository;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -22,12 +24,6 @@
         public IEnumerable<FiatCoin> GetAllFiatCoins() => _coinRepository.GetAllFiatCoins();
 
         public IEnumerable<CryptoCoin> GetAllCryptoCoins() => _coinRepository.GetAllCryptoCoins();
-
-        public FiatCoin GetFiatCoinById(int id) => _coinRepository.GetFiatCoinById(id);
-
-        public FiatCoin GetFiatCoinBySymbol(string symbol) => _coinRepository.GetFiatCoinBySymbol(symbol);
-
-        public CryptoCoin GetCryptoCoinById(int id) => _coinRepository.GetCryptoCoinById(id);
 
         public Quote GetLatestQuote(CryptoCoin @base, IEnumerable<FiatCoin> currencies)
         {

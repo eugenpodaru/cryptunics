@@ -1,4 +1,4 @@
-﻿namespace Cryptunics.Core
+﻿namespace Cryptunics.Core.Domain
 {
     using System;
 

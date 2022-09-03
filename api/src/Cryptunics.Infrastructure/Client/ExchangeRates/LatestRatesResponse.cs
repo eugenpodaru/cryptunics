@@ -1,4 +1,4 @@
-﻿namespace Cryptunics.Infrastructure.Clients.ExchangeRates
+﻿namespace Cryptunics.Infrastructure.Client.ExchangeRates
 {
     using System.Collections.Generic;
 

@@ -1,4 +1,4 @@
-﻿namespace Cryptunics.Infrastructure.Clients.ExchangeRates
+﻿namespace Cryptunics.Infrastructure.Client.ExchangeRates
 {
     using Cryptunics.Core.Domain;
     using Flurl;

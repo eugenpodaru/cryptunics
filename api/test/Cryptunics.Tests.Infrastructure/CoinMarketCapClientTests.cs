@@ -1,6 +1,6 @@
 ﻿namespace Cryptunics.Tests.Infrastructure
 {
-    using Cryptunics.Infrastructure.Clients.CoinMarketCap;
+    using Cryptunics.Infrastructure.Client.CoinMarketCap;
     using FluentAssertions;
     using System.Threading.Tasks;
     using Xunit;

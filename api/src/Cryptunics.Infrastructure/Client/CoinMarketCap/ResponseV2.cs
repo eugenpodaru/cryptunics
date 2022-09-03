@@ -1,4 +1,4 @@
-﻿namespace Cryptunics.Infrastructure.Clients.CoinMarketCap
+﻿namespace Cryptunics.Infrastructure.Client.CoinMarketCap
 {
     using System.Collections.Generic;
 

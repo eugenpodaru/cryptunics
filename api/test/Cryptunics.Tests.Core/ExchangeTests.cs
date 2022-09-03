@@ -6,6 +6,7 @@
     using FluentAssertions;
     using Moq;
     using System;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class ExchangeTests : IClassFixture<ExchangeFixture>
@@ -15,33 +16,33 @@
         public ExchangeTests(ExchangeFixture data) => _data = data;
 
         [Fact]
-        public void Given_Exchange_GetLatestQuote_ReturnsEmpty()
+        public async Task Given_Exchange_GetLatestQuote_ReturnsEmpty()
         {
             var exchange = GetExchange(_data.Bitcoin, _data.UsdRate, Array.Empty<Rate>());
 
-            var quote = exchange.GetLatestQuote(_data.Bitcoin);
+            var quote = await exchange.GetLatestQuoteAsync(_data.Bitcoin);
 
             quote.Base.Should().Be(_data.Bitcoin);
             quote.Rates.Should().BeEmpty();
         }
 
         [Fact]
-        public void Given_Exchange_GetLatestQuote_ReturnsBaseRate()
+        public async Task Given_Exchange_GetLatestQuote_ReturnsBaseRate()
         {
             var exchange = GetExchange(_data.Bitcoin, _data.UsdRate, Array.Empty<Rate>());
 
-            var quote = exchange.GetLatestQuote(_data.Bitcoin, _data.Usd);
+            var quote = await exchange.GetLatestQuoteAsync(_data.Bitcoin, _data.Usd);
 
             quote.Base.Should().Be(_data.Bitcoin);
             quote.Rates.Should().Equal(_data.UsdRate);
         }
 
         [Fact]
-        public void Given_Exchange_GetLatestQuote_ReturnsDerivedRate()
+        public async Task Given_Exchange_GetLatestQuote_ReturnsDerivedRate()
         {
             var exchange = GetExchange(_data.Bitcoin, _data.UsdRate, _data.EuroRate);
 
-            var quote = exchange.GetLatestQuote(_data.Bitcoin, _data.Euro);
+            var quote = await exchange.GetLatestQuoteAsync(_data.Bitcoin, _data.Euro);
 
             quote.Base.Should().Be(_data.Bitcoin);
             quote.Rates.Should().Equal(_data.EuroRate with
@@ -59,11 +60,11 @@
             var fiatCoinQuoteRepository = new Mock<IFiatCoinQuoteRepository>();
 
             cryptoCoinQuoteRepository
-                .Setup(r => r.GetLatestQuote(It.IsAny<CryptoCoin>(), It.IsAny<FiatCoin>()))
-                .Returns(() => new Quote(@base, new[] { baseRate }));
+                .Setup(r => r.GetLatestQuoteAsync(It.IsAny<CryptoCoin>(), It.IsAny<FiatCoin>()))
+                .ReturnsAsync(() => new Quote(@base, new[] { baseRate }));
             fiatCoinQuoteRepository
-                .Setup(r => r.GetLatestQuote(It.IsAny<FiatCoin>(), It.IsAny<FiatCoin[]>()))
-                .Returns(() => new Quote(baseRate.Currency, rates));
+                .Setup(r => r.GetLatestQuoteAsync(It.IsAny<FiatCoin>(), It.IsAny<FiatCoin[]>()))
+                .ReturnsAsync(() => new Quote(baseRate.Currency, rates));
 
             return new Exchange(baseRate.Currency, coinRepository.Object, fiatCoinQuoteRepository.Object, cryptoCoinQuoteRepository.Object);
         }

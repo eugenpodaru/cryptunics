@@ -4,6 +4,6 @@
 
     public interface IFiatCoinQuoteRepository
     {
-        Quote GetLatestQuote(FiatCoin @base, params FiatCoin[] currencies);
+        Task<Quote> GetLatestQuoteAsync(FiatCoin @base, params FiatCoin[] currencies);
     }
 }

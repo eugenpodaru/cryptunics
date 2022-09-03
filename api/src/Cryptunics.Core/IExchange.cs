@@ -5,8 +5,10 @@
 
     public interface IExchange
     {
-        IEnumerable<CryptoCoin> GetAllCryptoCoins();
-        IEnumerable<FiatCoin> GetAllFiatCoins();
-        Quote GetLatestQuote(CryptoCoin @base, params FiatCoin[] currencies);
+        Task<IEnumerable<CryptoCoin>> GetAllCryptoCoinsAsync();
+
+        Task<IEnumerable<FiatCoin>> GetAllFiatCoinsAsync();
+
+        Task<Quote> GetLatestQuoteAsync(CryptoCoin @base, params FiatCoin[] currencies);
     }
 }

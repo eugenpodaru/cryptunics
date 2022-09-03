@@ -1,7 +1,7 @@
 ﻿namespace Cryptunics.Tests.Infrastructure
 {
     using Cryptunics.Core.Domain;
-    using Cryptunics.Infrastructure.Clients.CoinMarketCap;
+    using Cryptunics.Infrastructure.Client.CoinMarketCap;
 
     public class CoinMarketCapClientFixture
     {

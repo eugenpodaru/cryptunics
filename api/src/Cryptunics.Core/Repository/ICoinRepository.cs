@@ -5,10 +5,14 @@
 
     public interface ICoinRepository
     {
-        IEnumerable<FiatCoin> GetAllFiatCoins();
-        IEnumerable<CryptoCoin> GetAllCryptoCoins();
-        FiatCoin GetFiatCoinById(int id);
-        FiatCoin GetFiatCoinBySymbol(string symbol);
-        CryptoCoin GetCryptoCoinById(int id);
+        Task<IEnumerable<FiatCoin>> GetAllFiatCoinsAsync();
+
+        Task<IEnumerable<CryptoCoin>> GetAllCryptoCoinsAsync();
+
+        Task<FiatCoin> GetFiatCoinByIdAsync(int id);
+
+        Task<FiatCoin> GetFiatCoinBySymbolAsync(string symbol);
+
+        Task<CryptoCoin> GetCryptoCoinByIdAsync(int id);
     }
 }

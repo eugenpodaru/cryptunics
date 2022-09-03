@@ -21,25 +21,25 @@
             _cryptoCoinQuoteRepository = cryptoCoinQuoteRepository ?? throw new ArgumentNullException(nameof(cryptoCoinQuoteRepository));
         }
 
-        public IEnumerable<FiatCoin> GetAllFiatCoins() => _coinRepository.GetAllFiatCoins();
+        public Task<IEnumerable<FiatCoin>> GetAllFiatCoinsAsync() => _coinRepository.GetAllFiatCoinsAsync();
 
-        public IEnumerable<CryptoCoin> GetAllCryptoCoins() => _coinRepository.GetAllCryptoCoins();
+        public Task<IEnumerable<CryptoCoin>> GetAllCryptoCoinsAsync() => _coinRepository.GetAllCryptoCoinsAsync();
 
-        public Quote GetLatestQuote(CryptoCoin @base, params FiatCoin[] currencies)
+        public Task<Quote> GetLatestQuoteAsync(CryptoCoin @base, params FiatCoin[] currencies)
         {
             return currencies.Length switch
             {
-                0 => Quote.Empty(@base),
-                1 => currencies.Single() == _exchangeBase ? GetLatestQuoteForExchangeBase() : GetLatestQuoteForCurrencies(),
-                _ => GetLatestQuoteForCurrencies()
+                0 => Task.FromResult(Quote.Empty(@base)),
+                1 => currencies.Single() == _exchangeBase ? GetLatestQuoteForExchangeBaseAsync() : GetLatestQuoteForCurrenciesAsync(),
+                _ => GetLatestQuoteForCurrenciesAsync()
             };
 
-            Quote GetLatestQuoteForExchangeBase() => _cryptoCoinQuoteRepository.GetLatestQuote(@base, _exchangeBase);
+            Task<Quote> GetLatestQuoteForExchangeBaseAsync() => _cryptoCoinQuoteRepository.GetLatestQuoteAsync(@base, _exchangeBase);
 
-            Quote GetLatestQuoteForCurrencies()
+            async Task<Quote> GetLatestQuoteForCurrenciesAsync()
             {
-                var exchangeBaseQuote = GetLatestQuoteForExchangeBase();
-                var fiatQuote = _fiatCoinQuoteRepository.GetLatestQuote(_exchangeBase, currencies.Except(new[] { _exchangeBase }).ToArray());
+                var exchangeBaseQuote = await GetLatestQuoteForExchangeBaseAsync();
+                var fiatQuote = await _fiatCoinQuoteRepository.GetLatestQuoteAsync(_exchangeBase, currencies.Except(new[] { _exchangeBase }).ToArray());
 
                 var exchangeBaseRate = exchangeBaseQuote.Rates.First(r => r.Currency == _exchangeBase);
                 var fiatRates = fiatQuote.Rates.ToDictionary(r => r.Currency);

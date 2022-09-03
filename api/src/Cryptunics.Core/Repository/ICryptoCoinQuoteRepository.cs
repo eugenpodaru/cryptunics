@@ -4,6 +4,6 @@
 
     public interface ICryptoCoinQuoteRepository
     {
-        Quote GetLatestQuote(CryptoCoin @base, FiatCoin currency);
+        Task<Quote> GetLatestQuoteAsync(CryptoCoin @base, FiatCoin currency);
     }
 }

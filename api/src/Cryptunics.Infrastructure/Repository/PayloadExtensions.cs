@@ -29,7 +29,7 @@
                         continue;
                     }
 
-                    var lastUpdated = string.IsNullOrEmpty(quotePayload.LastUpdated) ? DateTimeOffset.Now : DateTimeOffset.Parse(quotePayload.LastUpdated);
+                    var lastUpdated = string.IsNullOrEmpty(quotePayload.LastUpdated) ? DateTimeOffset.UtcNow : DateTimeOffset.Parse(quotePayload.LastUpdated);
 
                     yield return new Rate(currency, quotePayload.Price, lastUpdated);
                 }
@@ -38,9 +38,7 @@
 
         public static Rate[] ToRates(this LatestRatesResponse response, params FiatCoin[] currencies)
         {
-            var timespan = new TimeSpan(response.Timestamp * TimeSpan.TicksPerSecond);
-            var date = string.IsNullOrEmpty(response.Date) ? DateTime.Now : DateTime.Parse(response.Date);
-            var lastUpdated = new DateTimeOffset(date, timespan);
+            var lastUpdated = DateTimeOffset.FromUnixTimeSeconds(response.Timestamp);
 
             return ToRatesEnumerable().ToArray();
 
@@ -48,7 +46,7 @@
             {
                 foreach (var currency in currencies)
                 {
-                    if (!response.Rates!.TryGetValue(currency.Id.ToString(), out var rate))
+                    if (!response.Rates!.TryGetValue(currency.Symbol, out var rate))
                     {
                         continue;
                     }

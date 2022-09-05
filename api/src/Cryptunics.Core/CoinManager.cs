@@ -7,12 +7,12 @@
     public class CoinManager : ICoinManager
     {
         private readonly ICoinRepository _coinRepository;
-        private readonly CoinOptions _options;
+        private readonly CoinManagerOptions _options;
 
         private readonly Lazy<Task<FiatCoin>> _defaultFiatCoinLazy;
         private readonly Lazy<Task<FiatCoin[]>> _quoteFiatCoinsLazy;
 
-        public CoinManager(ICoinRepository coinRepository, CoinOptions options)
+        public CoinManager(ICoinRepository coinRepository, CoinManagerOptions options)
         {
             _coinRepository = coinRepository ?? throw new ArgumentNullException(nameof(coinRepository));
             _options = options ?? throw new ArgumentNullException(nameof(options));

@@ -4,8 +4,8 @@
 
     public interface IExchange
     {
-        Task<Quote> GetLatestQuoteAsync(int baseId);
+        Task<Quote> GetLatestQuoteAsync(int cryptoCoinId);
 
-        Task<Quote> GetLatestQuoteAsync(CryptoCoin @base);
+        Task<Quote> GetLatestQuoteAsync(CryptoCoin cryptoCoin);
     }
 }

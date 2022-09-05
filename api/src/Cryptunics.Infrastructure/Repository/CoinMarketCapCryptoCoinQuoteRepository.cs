@@ -23,7 +23,7 @@
                 var latestListings = await _client.GetLatestListingsAsync(currency, @base);
                 var latestListing = latestListings.Data!.Values.Single();
 
-                return latestListing.ToQuote();
+                return latestListing.ToQuote(currency);
             }
 
             static string GetCacheKey(CryptoCoin @base, FiatCoin currency) => $"{nameof(CoinMarketCapCryptoCoinQuoteRepository)}_{@base.Id}_{currency.Id}";

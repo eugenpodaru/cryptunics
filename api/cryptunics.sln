@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cryptunics.Infrastructure",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cryptunics.Tests.Infrastructure", "test\Cryptunics.Tests.Infrastructure\Cryptunics.Tests.Infrastructure.csproj", "{74C314AE-0591-4429-991E-135615009504}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cryptunics.Web", "src\Cryptunics.Web\Cryptunics.Web.csproj", "{D522BE1E-8F30-4F7B-818F-14D9D07E8931}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{74C314AE-0591-4429-991E-135615009504}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74C314AE-0591-4429-991E-135615009504}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74C314AE-0591-4429-991E-135615009504}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D522BE1E-8F30-4F7B-818F-14D9D07E8931}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D522BE1E-8F30-4F7B-818F-14D9D07E8931}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D522BE1E-8F30-4F7B-818F-14D9D07E8931}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D522BE1E-8F30-4F7B-818F-14D9D07E8931}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

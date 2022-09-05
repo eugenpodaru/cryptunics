@@ -54,7 +54,7 @@
             });
         }
 
-        private static IExchange GetExchange(CryptoCoin @base, Rate baseRate, params Rate[] rates)
+        private static IExchange GetExchange(CryptoCoin cryptoCoin, Rate defaultRate, params Rate[] rates)
         {
             var coinManager = new Mock<ICoinManager>();
             var cryptoCoinQuoteRepository = new Mock<ICryptoCoinQuoteRepository>();
@@ -62,16 +62,16 @@
 
             coinManager
                 .Setup(m => m.GetDefaultFiatCoinAsync())
-                .ReturnsAsync(() => baseRate.Currency);
+                .ReturnsAsync(() => defaultRate.Currency);
             coinManager
                 .Setup(m => m.GetQuoteFiatCoinsAsync())
                 .ReturnsAsync(() => rates.Select(r => r.Currency));
             cryptoCoinQuoteRepository
                 .Setup(r => r.GetLatestQuoteAsync(It.IsAny<CryptoCoin>(), It.IsAny<FiatCoin>()))
-                .ReturnsAsync(() => new Quote(@base, new[] { baseRate }));
+                .ReturnsAsync(() => new Quote(cryptoCoin, new[] { defaultRate }));
             fiatCoinQuoteRepository
                 .Setup(r => r.GetLatestQuoteAsync(It.IsAny<FiatCoin>(), It.IsAny<FiatCoin[]>()))
-                .ReturnsAsync(() => new Quote(baseRate.Currency, rates));
+                .ReturnsAsync(() => new Quote(defaultRate.Currency, rates));
 
             return new Exchange(coinManager.Object, fiatCoinQuoteRepository.Object, cryptoCoinQuoteRepository.Object);
         }

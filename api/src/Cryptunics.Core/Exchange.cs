@@ -18,51 +18,50 @@
             _cryptoCoinQuoteRepository = cryptoCoinQuoteRepository ?? throw new ArgumentNullException(nameof(cryptoCoinQuoteRepository));
         }
 
-        public async Task<Quote> GetLatestQuoteAsync(int baseId)
+        public async Task<Quote> GetLatestQuoteAsync(int cryptoCoinId)
         {
-            var @base = await _coinManager.GetCryptoCoinByIdAsync(baseId);
+            var @base = await _coinManager.GetCryptoCoinByIdAsync(cryptoCoinId);
 
             return await GetLatestQuoteAsync(@base);
         }
 
-        public async Task<Quote> GetLatestQuoteAsync(CryptoCoin @base)
+        public async Task<Quote> GetLatestQuoteAsync(CryptoCoin cryptoCoin)
         {
-            var defaultCurrency = await _coinManager.GetDefaultFiatCoinAsync();
-            var quoteCurrencies = await _coinManager.GetQuoteFiatCoinsAsync();
+            var defaultCoin = await _coinManager.GetDefaultFiatCoinAsync();
+            var quoteCoins = await _coinManager.GetQuoteFiatCoinsAsync();
 
-            return quoteCurrencies.Count() switch
+            return quoteCoins.Count() switch
             {
-                0 => Quote.Empty(@base),
-                1 => quoteCurrencies.Single() == defaultCurrency ? await GetLatestQuoteForExchangeBaseAsync() : await GetLatestQuoteForCurrenciesAsync(),
-                _ => await GetLatestQuoteForCurrenciesAsync()
+                0 => Quote.Empty(cryptoCoin),
+                1 => quoteCoins.Single() == defaultCoin ? await GetLatestQuoteForDefaultCoinAsync() : await GetLatestQuoteForCoinsAsync(),
+                _ => await GetLatestQuoteForCoinsAsync()
             };
 
-            Task<Quote> GetLatestQuoteForExchangeBaseAsync() => _cryptoCoinQuoteRepository.GetLatestQuoteAsync(@base, defaultCurrency);
+            Task<Quote> GetLatestQuoteForDefaultCoinAsync() => _cryptoCoinQuoteRepository.GetLatestQuoteAsync(cryptoCoin, defaultCoin);
 
-            async Task<Quote> GetLatestQuoteForCurrenciesAsync()
+            async Task<Quote> GetLatestQuoteForCoinsAsync()
             {
-                var exchangeBaseQuote = await GetLatestQuoteForExchangeBaseAsync();
-                var fiatQuote = await _fiatCoinQuoteRepository.GetLatestQuoteAsync(defaultCurrency, quoteCurrencies.Except(new[] { defaultCurrency }).ToArray());
+                var defaultCoinQuote = await GetLatestQuoteForDefaultCoinAsync();
+                var coinsQuote = await _fiatCoinQuoteRepository.GetLatestQuoteAsync(defaultCoin, quoteCoins.Except(new[] { defaultCoin }).ToArray());
 
-                var exchangeBaseRate = exchangeBaseQuote.Rates.First(r => r.Currency == defaultCurrency);
-                var fiatRates = fiatQuote.Rates.ToDictionary(r => r.Currency);
+                var defaultCoinRate = defaultCoinQuote.Rates.First(r => r.Currency == defaultCoin);
+                var coinsRates = coinsQuote.Rates.ToDictionary(r => r.Currency);
 
-                var rates = quoteCurrencies.Select(c => GetDerivedRate(c, defaultCurrency, fiatRates[c], exchangeBaseRate)).ToArray();
-
-                return exchangeBaseQuote with { Rates = rates };
-            }
-
-            static Rate GetDerivedRate(FiatCoin coin, FiatCoin @base, Rate coinRate, Rate baseRate)
-            {
-                if (coin == @base)
+                var rates = quoteCoins.Select(coin =>
                 {
-                    return baseRate;
-                }
+                    if (coin == defaultCoin)
+                    {
+                        return defaultCoinRate;
+                    }
 
-                var derivedPrice = coinRate.Price * baseRate.Price;
-                var derivedTimestamp = coinRate.Timestamp < baseRate.Timestamp ? coinRate.Timestamp : baseRate.Timestamp;
+                    var coinRate = coinsRates[coin];
+                    var derivedPrice = coinRate.Price * defaultCoinRate.Price;
+                    var derivedTimestamp = coinRate.Timestamp < defaultCoinRate.Timestamp ? coinRate.Timestamp : defaultCoinRate.Timestamp;
 
-                return coinRate with { Price = derivedPrice, IsDerived = true, Timestamp = derivedTimestamp };
+                    return coinRate with { Price = derivedPrice, IsDerived = true, Timestamp = derivedTimestamp };
+                }).ToArray();
+
+                return defaultCoinQuote with { Rates = rates };
             }
         }
     }

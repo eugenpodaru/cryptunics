@@ -14,9 +14,9 @@
         public CoinMarketCapCryptoCoinQuoteRepository(ICoinMarketCapClient client, IAppCache cache, CryptoCoinQuoteRepositoryOptions options) : base(cache, options)
             => _client = client ?? throw new ArgumentNullException(nameof(client));
 
-        public Task<Quote> GetLatestQuoteAsync(CryptoCoin @base, FiatCoin currency)
+        public async Task<Quote> GetLatestQuoteAsync(CryptoCoin @base, FiatCoin currency)
         {
-            return GetOrAddAsync(GetCacheKey(@base, currency), GetLatestListingsAsync);
+            return await GetOrAddAsync(GetCacheKey(@base, currency), GetLatestListingsAsync);
 
             async Task<Quote> GetLatestListingsAsync()
             {

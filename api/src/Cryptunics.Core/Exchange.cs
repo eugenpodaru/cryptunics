@@ -51,19 +51,19 @@
 
                 return exchangeBaseQuote with { Rates = rates };
             }
-        }
 
-        private static Rate GetDerivedRate(FiatCoin coin, FiatCoin @base, Rate coinRate, Rate baseRate)
-        {
-            if (coin == @base)
+            static Rate GetDerivedRate(FiatCoin coin, FiatCoin @base, Rate coinRate, Rate baseRate)
             {
-                return baseRate;
+                if (coin == @base)
+                {
+                    return baseRate;
+                }
+
+                var derivedPrice = coinRate.Price * baseRate.Price;
+                var derivedTimestamp = coinRate.Timestamp < baseRate.Timestamp ? coinRate.Timestamp : baseRate.Timestamp;
+
+                return coinRate with { Price = derivedPrice, IsDerived = true, Timestamp = derivedTimestamp };
             }
-
-            var derivedPrice = coinRate.Price * baseRate.Price;
-            var derivedTimestamp = coinRate.Timestamp < baseRate.Timestamp ? coinRate.Timestamp : baseRate.Timestamp;
-
-            return coinRate with { Price = derivedPrice, IsDerived = true, Timestamp = derivedTimestamp };
         }
     }
 }

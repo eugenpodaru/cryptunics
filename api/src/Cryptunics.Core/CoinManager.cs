@@ -21,13 +21,13 @@
             _quoteFiatCoinsLazy = new(() => GetFiatCoinsBySymbolsAsync(_options.QuoteFiatCurrencySymbols));
         }
 
-        public Task<IEnumerable<FiatCoin>> GetAllFiatCoinsAsync() => _coinRepository.GetAllFiatCoinsAsync();
+        public async Task<IEnumerable<FiatCoin>> GetAllFiatCoinsAsync() => await _coinRepository.GetAllFiatCoinsAsync();
 
-        public Task<IEnumerable<CryptoCoin>> GetAllCryptoCoinsAsync() => _coinRepository.GetAllCryptoCoinsAsync();
+        public async Task<IEnumerable<CryptoCoin>> GetAllCryptoCoinsAsync() => await _coinRepository.GetAllCryptoCoinsAsync();
 
-        public Task<CryptoCoin> GetCryptoCoinByIdAsync(int id) => _coinRepository.GetCryptoCoinByIdAsync(id);
+        public async Task<CryptoCoin> GetCryptoCoinByIdAsync(int id) => await _coinRepository.GetCryptoCoinByIdAsync(id);
 
-        public Task<FiatCoin> GetDefaultFiatCoinAsync() => _defaultFiatCoinLazy.Value;
+        public async Task<FiatCoin> GetDefaultFiatCoinAsync() => await _defaultFiatCoinLazy.Value;
 
         public async Task<IEnumerable<FiatCoin>> GetQuoteFiatCoinsAsync() => await _quoteFiatCoinsLazy.Value;
 

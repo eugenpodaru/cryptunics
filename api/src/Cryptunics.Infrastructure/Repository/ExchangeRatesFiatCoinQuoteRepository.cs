@@ -14,9 +14,9 @@
         public ExchangeRatesFiatCoinQuoteRepository(IExchangeRatesClient client, IAppCache cache, FiatCoinQuoteRepositoryOptions options) : base(cache, options)
             => _client = client ?? throw new ArgumentNullException(nameof(client));
 
-        public Task<Quote> GetLatestQuoteAsync(FiatCoin @base, params FiatCoin[] currencies)
+        public async Task<Quote> GetLatestQuoteAsync(FiatCoin @base, params FiatCoin[] currencies)
         {
-            return GetOrAddAsync(GetCacheKey(@base, currencies), GetLatestRatesAsync);
+            return await GetOrAddAsync(GetCacheKey(@base, currencies), GetLatestRatesAsync);
 
             async Task<Quote> GetLatestRatesAsync()
             {

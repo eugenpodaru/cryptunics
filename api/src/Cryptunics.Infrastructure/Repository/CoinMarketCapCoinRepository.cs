@@ -10,9 +10,6 @@
 
     public class CoinMarketCapCoinRepository : CacheEnabledRepository, ICoinRepository
     {
-        private readonly string _cryptoCoinsCacheKey = $"{nameof(CoinMarketCapCoinRepository)}_{nameof(GetCryptoCoinsAsync)}";
-        private readonly string _fiatCoinsCacheKey = $"{nameof(CoinMarketCapCoinRepository)}_{nameof(GetFiatCoinsAsync)}";
-
         private readonly ICoinMarketCapClient _client;
 
         private readonly Lazy<Task<List<CryptoCoin>>> _cryptoCoinsLazy;
@@ -30,9 +27,9 @@
 
         public async Task<IEnumerable<FiatCoin>> GetAllFiatCoinsAsync() => await _fiatCoinsLazy.Value;
 
-        public Task<CryptoCoin> GetCryptoCoinByIdAsync(int id)
+        public async Task<CryptoCoin> GetCryptoCoinByIdAsync(int id)
         {
-            return GetOrAddAsync(GetCacheKey(id), AddAndGetCryptoCoinById);
+            return await GetOrAddAsync(GetCacheKey(id), AddAndGetCryptoCoinById);
 
             async Task<CryptoCoin> AddAndGetCryptoCoinById()
             {
@@ -49,15 +46,15 @@
                     Add(GetCacheKey(coin.Id), coin);
                 }
 
-                return searchCoin ?? throw new KeyNotFoundException();
+                return searchCoin ?? throw new KeyNotFoundException($"Could not find crypto coin for id: {id}.");
             }
 
             static string GetCacheKey(int id) => $"{nameof(CoinMarketCapCoinRepository)}_{nameof(GetCryptoCoinByIdAsync)}_{id}";
         }
 
-        public Task<FiatCoin> GetFiatCoinBySymbolAsync(string symbol)
+        public async Task<FiatCoin> GetFiatCoinBySymbolAsync(string symbol)
         {
-            return GetOrAddAsync(GetCacheKey(symbol), AddAndGetFiatCoinBySymbol);
+            return await GetOrAddAsync(GetCacheKey(symbol), AddAndGetFiatCoinBySymbol);
 
             async Task<FiatCoin> AddAndGetFiatCoinBySymbol()
             {
@@ -74,7 +71,7 @@
                     Add(GetCacheKey(coin.Symbol), coin);
                 }
 
-                return searchCoin ?? throw new KeyNotFoundException();
+                return searchCoin ?? throw new KeyNotFoundException($"Could not find fiat coin for symbol: {symbol}.");
             }
 
             static string GetCacheKey(string symbol) => $"{nameof(CoinMarketCapCoinRepository)}_{nameof(GetFiatCoinBySymbolAsync)}_{symbol}";
@@ -82,7 +79,7 @@
 
         private Task<List<CryptoCoin>> GetCryptoCoinsAsync()
         {
-            return GetOrAddAsync(_cryptoCoinsCacheKey, GetCryptoCoinMapAsync);
+            return GetOrAddAsync(GetCacheKey(), GetCryptoCoinMapAsync);
 
             async Task<List<CryptoCoin>> GetCryptoCoinMapAsync()
             {
@@ -90,11 +87,13 @@
 
                 return coinMap.Data!.Select(p => p.ToCryptoCoin()).ToList();
             }
+
+            static string GetCacheKey() => $"{nameof(CoinMarketCapCoinRepository)}_{nameof(GetCryptoCoinsAsync)}";
         }
 
         private Task<List<FiatCoin>> GetFiatCoinsAsync()
         {
-            return GetOrAddAsync(_fiatCoinsCacheKey, GetFiatCoinMapAsync);
+            return GetOrAddAsync(GetCacheKey(), GetFiatCoinMapAsync);
 
             async Task<List<FiatCoin>> GetFiatCoinMapAsync()
             {
@@ -102,6 +101,8 @@
 
                 return coinMap.Data!.Select(p => p.ToFiatCoin()).ToList();
             }
+
+            static string GetCacheKey() => $"{nameof(CoinMarketCapCoinRepository)}_{nameof(GetFiatCoinsAsync)}";
         }
     }
 }

@@ -9,8 +9,6 @@
 
         Task<IEnumerable<CryptoCoin>> GetAllCryptoCoinsAsync();
 
-        Task<FiatCoin> GetFiatCoinByIdAsync(int id);
-
         Task<FiatCoin> GetFiatCoinBySymbolAsync(string symbol);
 
         Task<CryptoCoin> GetCryptoCoinByIdAsync(int id);

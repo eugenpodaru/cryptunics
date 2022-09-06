@@ -23,4 +23,7 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<div class="coin-dashboard"></div>
+<div class="coin-dashboard">
+  <app-coin-tile *ngFor="let coin of displayedCoins; index as i" [coin]="coin"
+    (remove)="onRemoveDisplayedCoin($event, i)"></app-coin-tile>
+</div>

@@ -1,0 +1,21 @@
+.coin-card {
+  width: 350px;
+  margin: 10px;
+}
+
+.coin-logo {
+  background-size: cover;
+}
+
+.actions {
+  display: flex;
+
+  .flex-spacer {
+    flex-grow: 1;
+  }
+
+  .remark {
+    align-self: center;
+    margin-right: 20px;
+  }
+}

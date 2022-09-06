@@ -26,8 +26,8 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain(
-      'cryptunics app is running!'
+    expect(compiled.querySelector('span.title')?.textContent).toContain(
+      'cryptunics'
     );
   });
 });

@@ -1,5 +1,7 @@
 # CRYPTUNICS
 
+![logo](https://cryptunicsst.z6.web.core.windows.net/assets/logo.png)
+
 An application that gives you the current quotes for selected crypto currencies in a number of most used fiat currencies. 
 
 ## What's in a name?

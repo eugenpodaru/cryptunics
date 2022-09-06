@@ -1,10 +1,10 @@
 namespace Cryptunics.Web.Controllers
 {
+    using System.Net;
     using Core;
     using Core.Domain;
     using Microsoft.AspNetCore.Mvc;
     using Models;
-    using System.Net;
 
     [ApiController]
     [Route("api/[controller]")]

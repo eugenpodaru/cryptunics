@@ -1,8 +1,8 @@
 ﻿namespace Cryptunics.Core
 {
+    using System;
     using Domain;
     using Repository;
-    using System;
 
     public class CoinManager : ICoinManager
     {

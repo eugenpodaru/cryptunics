@@ -1,9 +1,9 @@
 ﻿namespace Cryptunics.Core
 {
-    using Domain;
-    using Repository;
     using System;
     using System.Linq;
+    using Domain;
+    using Repository;
 
     public sealed class Exchange : IExchange
     {

@@ -1,7 +1,7 @@
 ﻿namespace Cryptunics.Core.Repository
 {
-    using Domain;
     using System.Collections.Generic;
+    using Domain;
 
     public interface ICoinRepository
     {

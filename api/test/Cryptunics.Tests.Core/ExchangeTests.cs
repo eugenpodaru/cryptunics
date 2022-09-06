@@ -1,13 +1,13 @@
 ﻿namespace Cryptunics.Tests.Core
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Cryptunics.Core;
     using Cryptunics.Core.Domain;
     using Cryptunics.Core.Repository;
     using FluentAssertions;
     using Moq;
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class ExchangeTests : IClassFixture<ExchangeFixture>

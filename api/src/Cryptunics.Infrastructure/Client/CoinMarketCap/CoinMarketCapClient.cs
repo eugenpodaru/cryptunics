@@ -1,10 +1,10 @@
 ﻿namespace Cryptunics.Infrastructure.Client.CoinMarketCap
 {
+    using System;
+    using System.Net;
     using Cryptunics.Core.Domain;
     using Flurl;
     using Flurl.Http;
-    using System;
-    using System.Net;
 
     public class CoinMarketCapClient : ICoinMarketCapClient
     {

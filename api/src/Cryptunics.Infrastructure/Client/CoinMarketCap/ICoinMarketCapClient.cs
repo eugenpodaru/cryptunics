@@ -1,7 +1,7 @@
 ﻿namespace Cryptunics.Infrastructure.Client.CoinMarketCap
 {
-    using Core.Domain;
     using System.Threading.Tasks;
+    using Core.Domain;
 
     public interface ICoinMarketCapClient
     {

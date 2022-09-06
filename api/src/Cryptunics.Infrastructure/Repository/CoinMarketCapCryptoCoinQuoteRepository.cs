@@ -1,11 +1,11 @@
 ﻿namespace Cryptunics.Infrastructure.Repository
 {
+    using System;
+    using System.Threading.Tasks;
     using Client.CoinMarketCap;
     using Core.Domain;
     using Core.Repository;
     using LazyCache;
-    using System;
-    using System.Threading.Tasks;
 
     public class CoinMarketCapCryptoCoinQuoteRepository : CacheEnabledRepository, ICryptoCoinQuoteRepository
     {

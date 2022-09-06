@@ -1,11 +1,11 @@
 ﻿namespace Cryptunics.Infrastructure.Repository
 {
+    using System;
+    using System.Threading.Tasks;
     using Client.ExchangeRates;
     using Core.Domain;
     using Core.Repository;
     using LazyCache;
-    using System;
-    using System.Threading.Tasks;
 
     public class ExchangeRatesFiatCoinQuoteRepository : CacheEnabledRepository, IFiatCoinQuoteRepository
     {

@@ -1,7 +1,7 @@
 ﻿namespace Cryptunics.Infrastructure.Client.ExchangeRates
 {
-    using Core.Domain;
     using System.Threading.Tasks;
+    using Core.Domain;
 
     public interface IExchangeRatesClient
     {

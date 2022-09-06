@@ -1,8 +1,8 @@
 ﻿namespace Cryptunics.Infrastructure.Client.CoinMarketCap
 {
-    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using Newtonsoft.Json;
 
     public record ListingPayload
     {

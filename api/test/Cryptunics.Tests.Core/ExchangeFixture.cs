@@ -1,7 +1,7 @@
 ﻿namespace Cryptunics.Tests.Core
 {
-    using Cryptunics.Core.Domain;
     using System;
+    using Cryptunics.Core.Domain;
 
     public class ExchangeFixture
     {

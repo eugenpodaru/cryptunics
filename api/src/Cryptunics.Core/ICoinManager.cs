@@ -1,8 +1,8 @@
 ﻿namespace Cryptunics.Core
 {
-    using Domain;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Domain;
 
     public interface ICoinManager
     {

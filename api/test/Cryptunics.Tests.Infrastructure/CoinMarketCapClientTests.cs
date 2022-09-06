@@ -1,8 +1,8 @@
 ﻿namespace Cryptunics.Tests.Infrastructure
 {
+    using System.Threading.Tasks;
     using Cryptunics.Infrastructure.Client.CoinMarketCap;
     using FluentAssertions;
-    using System.Threading.Tasks;
     using Xunit;
 
     public class CoinMarketCapClientTests : IClassFixture<CoinMarketCapClientFixture>
